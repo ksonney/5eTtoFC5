@@ -96,10 +96,13 @@ def parseRace(m, compendium, args):
     size = ET.SubElement(race, 'size')
     if m['size'] == 'V':
         size.text = 'M'
+    elif type(m['size']) == list:
+        size.text = m['size'][0]
     else:
         size.text = m['size']
     
     speed = ET.SubElement(race, 'speed')
+
     if type(m['speed']) == dict:
         speed.text = str(m['speed']['walk'])
     elif m['speed'] != "Varies":

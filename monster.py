@@ -515,8 +515,10 @@ def parseMonster(m, compendium, args):
                 text = ET.SubElement(trait, 'text')
                 willspells = s['will']
                 text.text = "At will: " + \
-                    ", ".join([utils.remove5eShit(e) for e in willspells])
+                    ", ".join([utils.fixTags(e['entry'] if type(e) == dict else e,m,args.nohtml) for e in willspells if type(e) == str or (type(e) == dict and not e['hidden'])])
                 for spl in willspells:
+                    if type(spl) == dict:
+                        spl = spl['entry']
                     search = re.search(
                         r'{@spell+ (.*?)(\|.*)?}', spl, re.IGNORECASE)
                     if search is not None:
@@ -529,8 +531,10 @@ def parseMonster(m, compendium, args):
                     t = "{}/day{}: ".format(timeframe[0],
                                             " each" if len(timeframe) > 1 else "")
                     text.text = t + \
-                        ", ".join([utils.fixTags(e,m,args.nohtml) for e in dailyspells])
+                        ", ".join([utils.fixTags(e['entry'] if type(e) == dict else e,m,args.nohtml) for e in dailyspells if type(e) == str or (type(e) == dict and not e['hidden'])])
                     for spl in dailyspells:
+                        if type(spl) == dict:
+                            spl = spl['entry']
                         search = re.search(
                             r'{@spell+ (.*?)(\|.*)?}', spl, re.IGNORECASE)
                         if search is not None:

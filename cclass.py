@@ -64,13 +64,13 @@ def parseClass(m, compendium, args):
         armortext = ", ".join([x if type(x) == str else x['full'] for x in m['startingProficiencies']['armor']])
     else:
         armortext = "none"
-    SFText.text = "• Armor: " + armortext
+    SFText.text = "• Armor: " + utils.fixTags(armortext,m,args.nohtml)
     SFText = ET.SubElement(StartingFeature, 'text')
     if "weapons" in m['startingProficiencies']:
-        weapontext = ", ".join(m['startingProficiencies']['weapons'])
+        weapontext = ", ".join([x['proficiency']+(" (Optional)" if x['optional'] else "") if type(x) == dict else x for x in m['startingProficiencies']['weapons']])
     else:
         weapontext = "none"
-    SFText.text = "• Weapons: " + weapontext
+    SFText.text = "• Weapons: " + utils.fixTags(weapontext,m,args.nohtml)
     SFText = ET.SubElement(StartingFeature, 'text')
     if "tools" in m['startingProficiencies']:
         SFText.text = utils.fixTags("• Tools: " + ", ".join(m['startingProficiencies']['tools']),m,args.nohtml)
