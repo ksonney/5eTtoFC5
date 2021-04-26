@@ -667,6 +667,10 @@ for file in args.inputJSON:
                 m['type'] = m['vehicleType']
                 if 'ac' not in m:
                     m['ac'] = [ { "ac": "Unknown" } ]
+                if type(m['ac']) != list:
+                    m['ac'] = [m['ac']]
+                if type(m['hp']) != dict:
+                    m['hp'] = { "special": str(m['hp']) }
             if ignoreError:
                 try:
                     parseMonster(m, compendium, args)
