@@ -375,6 +375,25 @@ def parseMonster(m, compendium, args):
                     if match.group(4):
                         attack = ET.SubElement(action, 'attack')
                         attack.text = "{}|{}|{}".format(utils.remove5eShit(t['name']) if 'name' in t else "",match.group(2).replace(' ','') if match.group(2) else "",match.group(4).replace(' ',''))
+    if 'bonus' in m and m['bonus'] is not None:
+        action = ET.SubElement(monster, 'action')
+        name = ET.SubElement(action, 'name')
+        name.text = "BONUS ACTIONS"
+        if not args.nohtml:
+            name.text = "<u>{}</u>".format(name.text)
+        for t in m['bonus']:
+            action = ET.SubElement(monster, 'action')
+            if 'name' in t:
+                name = ET.SubElement(action, 'name')
+                name.text = utils.remove5eShit(t['name'])
+            for e in utils.getEntryString(t["entries"],m,args).split("\n"):
+                text = ET.SubElement(action, 'text')
+                text.text = e
+                for match in re.finditer(r'(((\+|\-)?[0-9]*) to hit.*?|DC [0-9]+ .*? saving throw.*?)\(([0-9Dd\+\- ]+)\) .*? damage',e):
+                    if match.group(4):
+                        attack = ET.SubElement(action, 'attack')
+                        attack.text = "{}|{}|{}".format(utils.remove5eShit(t['name']) if 'name' in t else "",match.group(2).replace(' ','') if match.group(2) else "",match.group(4).replace(' ',''))
+
 
 
     if 'reaction' in m and m['reaction'] is not None:
@@ -426,7 +445,9 @@ def parseMonster(m, compendium, args):
         if "mythicHeader" in m:
             for h in m['mythicHeader']:
                 name = ET.SubElement(mythic, 'name')
-                name.text = "Mythic Actions"
+                name.text = "MYTHIC ACTIONS"
+                if not args.nohtml:
+                    name.text = "<u>{}</u>".format(name.text)
                 mythic = ET.SubElement(monster, 'legendary')
                 text = ET.SubElement(mythic, 'text')
                 text.text = utils.remove5eShit(h)
@@ -450,7 +471,9 @@ def parseMonster(m, compendium, args):
             if 'lairActions' in l:
                 legendary = ET.SubElement(monster, 'legendary')
                 name = ET.SubElement(legendary, 'name')
-                name.text = "Lair Actions"
+                name.text = "LAIR ACTIONS"
+                if not args.nohtml:
+                    name.text = "<u>{}</u>".format(name.text)
                 legendary = ET.SubElement(monster, 'legendary')
                 for t in l['lairActions']:
                     if type(t) == str:
@@ -472,7 +495,9 @@ def parseMonster(m, compendium, args):
             if 'regionalEffects' in l:
                 legendary = ET.SubElement(monster, 'legendary')
                 name = ET.SubElement(legendary, 'name')
-                name.text = "Regional Effects"
+                name.text = "REGIONAL EFFECTS"
+                if not args.nohtml:
+                    name.text = "<u>{}</u>".format(name.text)
                 legendary = ET.SubElement(monster, 'legendary')
                 for t in l['regionalEffects']:
                     if type(t) == str:
@@ -495,6 +520,10 @@ def parseMonster(m, compendium, args):
                 mythic = ET.SubElement(monster, 'legendary')
                 name = ET.SubElement(mythic, 'name')
                 name.text = "{} as a Mythic Encounter".format(m["name"])
+                if not args.nohtml:
+                    name.text = "<u>{}</u>".format(name.text)
+                text = ET.SubElement(legendary, 'text')
+                mythic = ET.SubElement(monster, 'legendary')
                 for e in utils.getEntryString(l["mythicEncounter"],m,args).split("\n"):
                     text = ET.SubElement(mythic, 'text')
                     text.text = e
