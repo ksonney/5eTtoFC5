@@ -532,6 +532,7 @@ def parseMonster(m, compendium, args):
 
     if 'spellcasting' in m:
         spells = []
+        slots = []
         for s in m['spellcasting']:
             trait = ET.SubElement(monster, 'trait')
             name = ET.SubElement(trait, 'name')
@@ -588,13 +589,13 @@ def parseMonster(m, compendium, args):
                             r'{@spell+ (.*?)(\|.*)?}', spl, re.IGNORECASE)
                         if search is not None:
                             spells.append(search.group(1))
-                slotse = ET.SubElement(monster, 'slots')
-                slotse.text = ", ".join(slots)
             if 'footerEntries' in s:
                 for e in s['footerEntries']:
                     text = ET.SubElement(trait, 'text')
                     text.text = utils.fixTags(e,m,args.nohtml)
-
+        if len(slots) > 0:
+            slotse = ET.SubElement(monster, 'slots')
+            slotse.text = ", ".join(slots)
         spellse = ET.SubElement(monster, 'spells')
         spellse.text = ", ".join(spells)
 

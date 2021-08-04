@@ -425,6 +425,16 @@ def modList(items,mod):
                                 for match in re.finditer(r'{@hit ([-+0-9]*)}',items[i]["entries"][e]["entries"][e2]):
                                     toHit = int(match.group(1)) + mod['scalar']
                                     items[i]["entries"][e]["entries"][e2] = modRepl(items[i]["entries"][e]["entries"][e2],match.group(0),"{{@hit {:+d}}}".format(toHit),"")
+                        elif type(items[i]["entries"][e]) == dict and "items" in items[i]["entries"][e]:
+                            for e2 in range(len(items[i]["entries"][e]["items"])):
+                                if type(items[i]["entries"][e]["items"][e2]) == dict and "entry" in items[i]["entries"][e]["items"][e2]:
+                                    for match in re.finditer(r'{@hit ([-+0-9]*)}',items[i]["entries"][e]["items"][e2]["entry"]):
+                                        toHit = int(match.group(1)) + mod['scalar']
+                                        items[i]["entries"][e]["items"][e2]["entry"] = modRepl(items[i]["entries"][e]["items"][e2]["entry"],match.group(0),"{{@hit {:+d}}}".format(toHit),"")
+                                else:
+                                    for match in re.finditer(r'{@hit ([-+0-9]*)}',items[i]["entries"][e]["items"][e2]):
+                                        toHit = int(match.group(1)) + mod['scalar']
+                                        items[i]["entries"][e]["items"][e2] = modRepl(items[i]["entries"][e]["items"][e2],match.group(0),"{{@hit {:+d}}}".format(toHit),"")
                         else:
                             for match in re.finditer(r'{@hit ([-+0-9]*)}',items[i]["entries"][e]):
                                 toHit = int(match.group(1)) + mod['scalar']
@@ -447,6 +457,16 @@ def modList(items,mod):
                                 for match in re.finditer(r'{@dc ([-+0-9]*)}',items[i]["entries"][e]["entries"][e2]):
                                     dc = int(match.group(1)) + mod['scalar']
                                     items[i]["entries"][e]["entries"][e2] = modRepl(items[i]["entries"][e]["entries"][e2],match.group(0),"{{@dc {:+d}}}".format(dc),"")
+                        elif type(items[i]["entries"][e]) == dict and "items" in items[i]["entries"][e]:
+                            for e2 in range(len(items[i]["entries"][e]["items"])):
+                                if type(items[i]["entries"][e]["items"][e2]) == dict and "entry" in items[i]["entries"][e]["items"][e2]:
+                                    for match in re.finditer(r'{@dc ([-+0-9]*)}',items[i]["entries"][e]["items"][e2]["entry"]):
+                                        toHit = int(match.group(1)) + mod['scalar']
+                                        items[i]["entries"][e]["items"][e2]["entry"] = modRepl(items[i]["entries"][e]["items"][e2]["entry"],match.group(0),"{{@hit {:+d}}}".format(toHit),"")
+                                else:
+                                    for match in re.finditer(r'{@dc ([-+0-9]*)}',items[i]["entries"][e]["items"][e2]):
+                                        toHit = int(match.group(1)) + mod['scalar']
+                                        items[i]["entries"][e]["items"][e2] = modRepl(items[i]["entries"][e]["items"][e2],match.group(0),"{{@hit {:+d}}}".format(toHit),"")
                         else:
                             for match in re.finditer(r'{@dc ([-+0-9]*)}',items[i]["entries"][e]):
                                 dc = int(match.group(1)) + mod['scalar']
