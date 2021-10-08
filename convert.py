@@ -950,6 +950,12 @@ for file in args.inputJSON:
                     rwins += 1
     if 'class' in d:
         for m in d['class']:
+            if 'subclasses' not in m:
+                m['subclasses'] = []
+            if 'subclass' in d:
+                for subclass in d['subclass']:
+                    if subclass['className'] == m['name']:
+                        m['subclasses'].append(subclass)
             if args.srd:
                 if 'srd' not in m or not m['srd']:
                     continue

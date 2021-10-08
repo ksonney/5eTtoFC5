@@ -486,6 +486,8 @@ def parseItem(m, compendium, args):
                 if type(e) == dict and e["type"] == "list" and "style" in e and e["style"] == "list-hang-notitle":
                     for item in e["items"]:
                         if type(item) == dict:
+                            if "entry" not in item:
+                                item["entry"] = ""
                             if args.nohtml:
                                 bodyText.text += "• {}: {}".format(item["name"],utils.fixTags(item["entry"],m,args.nohtml)) + "\n"
                             else:
