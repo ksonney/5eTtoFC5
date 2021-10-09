@@ -5,6 +5,7 @@ import utils
 import json
 import os
 import copy
+import requests
 from slugify import slugify
 from shutil import copyfile
 
@@ -163,7 +164,10 @@ def parseMonster(m, compendium, args):
         else:
             hp.text = m['hp']['special']
     else:
-        hp.text = "{} ({})".format(m['hp']['average'], m['hp']['formula'].replace(' ',''))
+        if 'formula' not in m['hp']:
+            hp.text = str(m['hp']['average'])
+        else:
+            hp.text = "{} ({})".format(m['hp']['average'], m['hp']['formula'].replace(' ',''))
 
     speed = ET.SubElement(monster, 'speed')
     if type(m['speed']) == str:
@@ -184,16 +188,28 @@ def parseMonster(m, compendium, args):
                 lis.append("{} {} ft.".format(key, value))
         speed.text = ", ".join(lis)
     else:
-        speed.text = ", ".join(
-            [
-                "{} {} ft.".format(
-                    key,
-                    value['number'] if isinstance(
-                        value,
-                        dict) else value) for key,
-                value in m['speed'].items() if not isinstance(
-                    value,
-                    bool)])
+        def getSpeed(speedobj):
+            speeds = []
+            for key,value in speedobj.items():
+                if isinstance(value,bool):
+                    continue
+                if isinstance(value,list) and len(value) == 1:
+                    value = value[0]
+                if key == "alternate":
+                    speed = "or "+getSpeed(value)
+                elif isinstance(value,dict):
+                    speed = "{} {} ft. {}".format(
+                            key,
+                            value['number'],
+                            value['condition']
+                            )
+                else:
+                    speed = "{} {} ft.".format(
+                            key, value)
+                speeds.append(speed)
+            return ", ".join(speeds)
+
+        speed.text = getSpeed(m['speed'])
 
     statstr = ET.SubElement(monster, 'str')
     statstr.text = str(m['str'] if 'str' in m else '0')
@@ -281,6 +297,15 @@ def parseMonster(m, compendium, args):
             #    os.mkdir(os.path.join(args.tempdir,"tokens"))
             if 'image' in m:
                 artworkpath = m['image']
+                if m['image'] and not os.path.isfile("img/"+m['image']):
+                    if args.verbose:
+                        print("Downloading",m['image'])
+                    req = requests.get("https://5e.tools/"+artworkpath)
+                    if not os.path.exists(os.path.join("img",os.path.dirname(artworkpath))):
+                        os.makedirs(os.path.join("img",os.path.dirname(artworkpath)),exist_ok=True)
+                    with open(os.path.join("img",artworkpath), 'wb') as f:
+                        f.write(req.content)
+                        f.close()
             else:
                 artworkpath = None
             monstername = m["original_name"] if "original_name" in m else m["name"]
