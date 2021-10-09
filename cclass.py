@@ -182,9 +182,9 @@ def parseClass(m, compendium, args):
             slots=[[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]]
         for table in m['classTableGroups']:
             if "title" in table and table['title'] == "Spell Slots per Spell Level":
-                for lvl in range(len(table["rows"])):
-                    for c in table["rows"][lvl]:
-                        slots[lvl] = table["rows"][lvl]
+                for lvl in range(len(table["rowsSpellProgression"])):
+                    for c in table["rowsSpellProgression"][lvl]:
+                        slots[lvl] = table["rowsSpellProgression"][lvl]
         for table in m['classTableGroups']:
             cantripre = re.compile(r'{@filter ([Cc]antrips.*?)(\|.*?)?(\|.*?)?}')
             for i in range(len(table["colLabels"])):
