@@ -244,6 +244,8 @@ def parseSpell(m, compendium, args):
             else:
                 if type(e) == dict and e["type"] == "list" and "style" in e and e["style"] == "list-hang-notitle":
                     for item in e["items"]:
+                        if 'entry' not in item and 'entries' in item:
+                            item['entry'] = "; ".join(item['entries'])
                         bodyText.text += "• {}: {}".format(item["name"],utils.fixTags(item["entry"],m,args.nohtml)) + "\n"
                 elif type(e) == dict and e["type"] == "list":
                     for item in e["items"]:

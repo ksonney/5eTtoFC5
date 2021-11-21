@@ -600,10 +600,12 @@ def multiCR(cr,scale):
             cr = '{:.0f}'.format(cr)
     return cr
 
-def appendFluff(fluff,m,t='monsterFluff',nohtml=False):
+def appendFluff(fluff,m,t='monsterFluff',nohtml=False,src=None):
     entries = []
     for f in fluff[t]:
         if f['name'] == m:
+            if src and f['source'] != src:
+                continue
             if 'entries' in f:
                 for e in f['entries']:
                     if type(e) == dict and 'entries' in e and any('entries' in se for se in e['entries']):
@@ -618,9 +620,9 @@ def appendFluff(fluff,m,t='monsterFluff',nohtml=False):
                     else:
                         entries.append(e)
             elif "_copy" in f:
-                entries = appendFluff(fluff,f['_copy']['name'],t,nohtml)
+                entries = appendFluff(fluff,f['_copy']['name'],t,nohtml,f['_copy']['source'])
             if "_appendCopy" in f:
-                entries = entries + appendFluff(fluff,f['_appendCopy']['name'],t,nohtml)
+                entries = entries + appendFluff(fluff,f['_appendCopy']['name'],t,nohtml,f['_appendCopy']['source'])
     return entries
 
 def findFluffImage(fluff,m,t='monsterFluff'):

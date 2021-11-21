@@ -511,7 +511,10 @@ def parseMonster(m, compendium, args):
                     if t['type'] == 'list':
                         for i in t['items']:
                             text = ET.SubElement(legendary, 'text')
-                            text.text = "• " + utils.fixTags(i,m,args.nohtml)
+                            if type(i) == dict:
+                                text.text = "• <i>" + i['name'] + ".</i> " + utils.fixTags(i['entry'],m,args.nohtml)
+                            else:
+                                text.text = "• " + utils.fixTags(i,m,args.nohtml)
                         continue
                     for e in utils.getEntryString(t["entries"],m,args).split("\n"):
                         text = ET.SubElement(legendary, 'text')
@@ -535,7 +538,10 @@ def parseMonster(m, compendium, args):
                     if t['type'] == 'list':
                         for i in t['items']:
                             text = ET.SubElement(legendary, 'text')
-                            text.text = "• " + utils.fixTags(i,m,args.nohtml)
+                            if type(i) == dict:
+                                text.text = "• <i>" + i['name'] + ".</i> " + utils.fixTags(i['entry'],m,args.nohtml)
+                            else:
+                                text.text = "• " + utils.fixTags(i,m,args.nohtml)
                         continue
                     #legendary = ET.SubElement(monster, 'legendary')
                     for e in utils.getEntryString(t["entries"],m,args).split("\n"):

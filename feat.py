@@ -171,10 +171,15 @@ def parseFeat(m, compendium, args):
             else:
                 if type(e) == dict and e["type"] == "list" and "style" in e and e["style"] == "list-hang-notitle":
                     for item in e["items"]:
-                        if args.nohtml:
-                            bodyText.text += "• {}: {}".format(item["name"],utils.fixTags(item["entry"],m,args.nohtml)) + "\n"
+                        if type(item) == str:
+                            bodyText.text += "• {}".format(utils.fixTags(item,m,args.nohtml)) + "\n"
                         else:
-                            bodyText.text += "• <i>{}:</i> {}".format(item["name"],utils.fixTags(item["entry"],m,args.nohtml)) + "\n"
+                            if 'entry' not in item and 'entries' in item:
+                                item['entry'] = "; ".join(item['entries'])
+                            if args.nohtml:
+                                bodyText.text += "• {}: {}".format(item["name"],utils.fixTags(item["entry"],m,args.nohtml)) + "\n"
+                            else:
+                                bodyText.text += "• <i>{}:</i> {}".format(item["name"],utils.fixTags(item["entry"],m,args.nohtml)) + "\n"
                 elif type(e) == dict and e["type"] == "list":
                     for item in e["items"]:
                         if "entries" in item:

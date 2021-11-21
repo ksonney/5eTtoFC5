@@ -449,6 +449,8 @@ def flatten_json(nested_json, d, Class, args, level, attributes,subclassname='')
                                 flatten(item, m, args, "text")
                             else:
                                 flatten(item['name'], m, args, "text")
+                                if 'entry' not in item and 'entries' in item:
+                                    item['entry'] = "; ".join(item['entries'])
                                 flatten(item['entry'], m, args, "list")
                         blank = ET.SubElement(m, 'text')
                         blank.text = ""

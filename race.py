@@ -176,6 +176,8 @@ def parseRace(m, compendium, args):
                         elif type(sube) == dict and sube["type"] == "list" and "style" in sube and sube["style"] == "list-hang-notitle":
                             for item in sube["items"]:
                                 if type(item) == dict and 'type' in item and (item['type'] == 'item' or item['type'] == 'itemSpell'):
+                                    if 'entry' not in item and 'entries' in item:
+                                        item['entry'] = "; ".join(item['entries'])
                                     if args.nohtml:
                                         subentries.append("• {} {}".format(item["name"] if item["name"].endswith(':') else item["name"] + ':',utils.fixTags(item["entry"],m,args.nohtml)))
                                     else:
